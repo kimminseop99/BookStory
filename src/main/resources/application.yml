@@ -6,3 +6,7 @@ spring:
     url: jdbc:mariadb://localhost:3307/bookstory
     username: root
     password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
