@@ -1,16 +1,26 @@
-<table>
-    <thead>
-    <tr>
-        <th>제목</th>
-        <th>작성일시</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="question : ${questionList}">
-        <td>
-            <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
-        </td>
-        <td th:text="${question.createDate}"></td>
-    </tr>
-    </tbody>
-</table>
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="max-w-4xl mx-auto px-4 py-6">
+    <table class="w-full table-auto border-collapse">
+        <thead class="bg-gray-800 text-white">
+        <tr>
+            <th class="px-4 py-2 text-left">번호</th>
+            <th class="px-4 py-2 text-left">제목</th>
+            <th class="px-4 py-2 text-left">작성일시</th>
+        </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+        <tr th:each="question, loop : ${questionList}" class="hover:bg-gray-100">
+            <td class="px-4 py-2" th:text="${loop.count}"></td>
+            <td class="px-4 py-2">
+                <a th:href="@{|/question/detail/${question.id}|}"
+                   th:text="${question.subject}"
+                   class="text-blue-600 hover:underline font-medium"></a>
+            </td>
+            <td class="px-4 py-2 text-gray-600"
+                th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
+</div>
+</html>
