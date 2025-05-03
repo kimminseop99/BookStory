@@ -1,0 +1,24 @@
+<html layout:decorate="~{layout/layout}">
+<div layout:fragment="content">
+
+<div class="max-w-4xl mx-auto px-4 py-6">
+        <div class="bg-white shadow-md rounded-lg p-6 flex flex-col md:flex-row gap-6">
+            <img th:src="${book.image}" alt="책 표지" class="w-48 h-auto rounded-lg mx-auto md:mx-0" />
+            <div class="flex-1">
+                <h1 class="text-2xl font-bold mb-2" th:text="${book.title}">책 제목</h1>
+                <h2 class="text-lg text-gray-600 mb-4" th:text="${book.subtitle}">서브 타이틀</h2>
+                <p class="mb-2"><strong>ISBN13:</strong> <span th:text="${book.isbn13}">1234567890123</span></p>
+                <p class="mb-2"><strong>가격:</strong> <span th:text="${book.price}">$00.00</span></p>
+                <a th:href="${book.url}" target="_blank"
+                   class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                    책 구매/상세 페이지로 이동
+                </a>
+            </div>
+        </div>
+
+        <div class="mt-6">
+            <a th:href="@{/books}" class="text-blue-500 hover:underline">← 도서 목록으로 돌아가기</a>
+        </div>
+    </div>
+</div>
+</html>
