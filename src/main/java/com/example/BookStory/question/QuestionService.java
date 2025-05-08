@@ -1,5 +1,6 @@
 package com.example.BookStory.question;
 
+import com.example.BookStory.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

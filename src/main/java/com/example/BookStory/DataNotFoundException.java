@@ -1,4 +1,4 @@
-package com.example.BookStory.question;
+package com.example.BookStory;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

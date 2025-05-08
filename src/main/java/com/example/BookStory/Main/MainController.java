@@ -7,14 +7,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class MainController {
 
-    @GetMapping("/bookstory")
-    @ResponseBody
-    public String index() {
-        return "안녕하세요 민섭입니다.";
-    }
-
     @GetMapping("/")
     public String root() {
-        return "redirect:/books";
+        return "redirect:/main";
     }
 }
