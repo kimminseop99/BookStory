@@ -11,10 +11,56 @@
     <!-- ✅ main.css 연결 -->
     <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
-<body>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
 
+<div class="max-w-7xl mx-auto p-6">
+    <!-- 상단 헤더 -->
+    <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">📚 IT 독후감 모음</h1>
+        <a th:href="@{/books/new}" class="mt-4 md:mt-0 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+            + 새 리뷰 작성
+        </a>
+    </div>
+
+    <!-- 검색 창 추가 -->
+    <div class="mb-8 text-center">
+        <form action="/search" method="get" onsubmit="encodeSearchQuery()">
+            <input type="text" id="searchQuery" name="query" placeholder="책 검색" class="px-4 py-2 border rounded" required>
+            <button type="submit" class="px-6 py-2 ml-4 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                검색
+            </button>
+        </form>
+    </div>
+
+    <!-- 책 리스트 -->
+    <div th:if="${books != null and #lists.size(books) > 0}">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div th:each="book : ${books}" class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition duration-300 flex flex-col book-card">
+                <img th:src="${book.image}" alt="책 이미지" class="h-60 object-cover w-full book-card__image"/>
+                <div class="p-4 flex-grow flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-800 mb-2 book-card__title" th:text="${book.title}">책 제목</h2>
+                        <p class="text-gray-600 text-sm book-card__author" th:text="${book.author}">저자</p>
+                    </div>
+                    <a th:href="@{'/books/' + ${book.isbn}}" class="mt-4 inline-block text-blue-600 hover:text-blue-800 font-medium book-card__link">
+                        리뷰 보기 →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 책이 없는 경우 -->
+    <div th:if="${books == null or #lists.isEmpty(books)}" class="text-center text-gray-500 mt-12 text-lg">
+        등록된 독후감이 없습니다. 첫 리뷰를 작성해보세요!
+    </div>
+</div>
 
 <!-- ✅ main.js 연결 -->
-<script th:src="@{/js/main.js}"></script>
+<script>
+    function encodeSearchQuery() {
+        var queryInput = document.getElementById('searchQuery');
+        queryInput.value = encodeURIComponent(queryInput.value);  // 검색어를 URL-safe 형식으로 인코딩
+    }
+</script>
 </body>
 </html>

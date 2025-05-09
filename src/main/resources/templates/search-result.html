@@ -1,0 +1,31 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content">
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+<div class="max-w-7xl mx-auto p-6">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">📚 검색된 도서 목록</h1>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <!-- 도서 리스트 반복문 -->
+        <div th:each="book : ${books}" class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition duration-300 flex flex-col">
+            <img th:src="${book.image}" alt="책 이미지" class="h-60 object-cover w-full"/>
+            <div class="p-4 flex-grow flex flex-col justify-between">
+                <h2 class="text-lg font-semibold text-gray-800 mb-2" th:text="${book.title}">책 제목</h2>
+                <p class="text-gray-600 text-sm" th:text="${book.author}">저자</p>
+                <p class="text-gray-500 text-xs" th:text="${book.publisher}">출판사</p>
+                <a th:href="${book.link}" class="mt-4 inline-block text-blue-600 hover:text-blue-800 font-medium">
+                    책 자세히 보기 →
+                </a>
+            </div>
+        </div>
+    </div>
+    <div th:if="${#lists.isEmpty(books)}" class="text-center text-gray-500 mt-12 text-lg">
+        검색된 책이 없습니다. 다른 검색어로 시도해보세요!
+    </div>
+</div>
+
+</body>
+</div>
+</html>

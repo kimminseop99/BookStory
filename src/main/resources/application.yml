@@ -1,5 +1,6 @@
 server:
   port: 8090
+
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
@@ -10,3 +11,8 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+naver:
+  api:
+    client-id: _Pk2eerD9zgeYJhM2lj3
+    client-secret: zdAi_XzkLQ
