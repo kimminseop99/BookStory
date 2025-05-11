@@ -1,0 +1,48 @@
+<html layout:decorate="~{layout/layout}">
+<div layout:fragment="content" class="login_container flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 to-white px-4">
+    <form th:action="@{/user/login}" method="post"
+          class="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg space-y-6 border border-gray-200">
+
+        <h2 class="text-2xl font-bold text-center text-blue-700">로그인</h2>
+
+        <!-- 에러 메시지 -->
+        <div th:if="${param.error}" class="bg-red-100 text-red-700 text-sm p-3 rounded-md">
+            사용자ID 또는 비밀번호를 확인해 주세요.
+        </div>
+
+        <!-- 사용자 ID -->
+        <div class="flex flex-col">
+            <label for="username" class="mb-1 text-sm font-medium text-gray-700">사용자 ID</label>
+            <input type="text" name="username" id="username"
+                   class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                   placeholder="아이디를 입력하세요" required>
+        </div>
+
+        <!-- 비밀번호 -->
+        <div class="flex flex-col">
+            <label for="password" class="mb-1 text-sm font-medium text-gray-700">비밀번호</label>
+            <input type="password" name="password" id="password"
+                   class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                   placeholder="비밀번호를 입력하세요" required>
+        </div>
+
+        <!-- 로그인 버튼 -->
+        <button type="submit"
+                class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-semibold">
+            로그인
+        </button>
+
+        <!-- 회원가입 & 비밀번호 찾기 링크 -->
+        <div class="text-center text-sm text-gray-600 space-y-1">
+            <p>
+                아직 계정이 없으신가요?
+                <a th:href="@{/user/signup}" class="text-blue-600 hover:underline">회원가입</a>
+            </p>
+            <p>
+                비밀번호를 잊으셨나요?
+                <a th:href="@{/user/find-password}" class="text-blue-600 hover:underline">비밀번호 찾기</a>
+            </p>
+        </div>
+    </form>
+</div>
+</html>

@@ -21,16 +21,33 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <!-- 도서 리스트 반복문 -->
         <div th:each="book : ${books}" class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition duration-300 flex flex-col">
+            <!-- 책 이미지 -->
             <img th:src="${book.image}" alt="책 이미지" class="h-60 object-contain w-full"/>
+
             <div class="p-4 flex-grow flex flex-col justify-between">
-                <h2 class="text-lg font-semibold text-gray-800 mb-2" th:text="${book.title}">책 제목</h2>
-                <p class="text-gray-600 text-sm" th:text="${book.author}">저자</p>
-                <p class="text-gray-500 text-xs" th:text="${book.publisher}">출판사</p>
+                <!-- 책 제목: 텍스트가 3줄을 넘을 경우 '...'으로 대체 -->
+                <h2 class="text-lg font-semibold text-gray-800 mb-2 line-clamp-3" th:text="${book.title}">책 제목</h2>
+
+                <!-- 저자 -->
+                <p class="text-gray-600 text-sm mb-2" th:text="${book.author}">저자</p>
+
+                <!-- 출판사 -->
+                <p class="text-gray-500 text-xs mb-2" th:text="${book.publisher}">출판사</p>
+
+                <!-- 할인 가격 -->
+                <div class="flex text-bold text-xs mb-4" >
+                    <p th:text="${book.discountFormatted()}">가격</p>
+                    <p>원</p>
+                </div>
+
+
+                <!-- 책 자세히 보기 링크 -->
                 <a th:href="${book.link}" class="mt-4 inline-block text-blue-600 hover:text-blue-800 font-medium">
                     책 자세히 보기 →
                 </a>
             </div>
         </div>
+
     </div>
     <div th:if="${#lists.isEmpty(books)}" class="text-center text-gray-500 mt-12 text-lg">
         검색된 책이 없습니다. 다른 검색어로 시도해보세요!

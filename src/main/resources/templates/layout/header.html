@@ -1,0 +1,38 @@
+<header th:fragment="headerFragment" class="max-w-7xl mx-auto p-6">
+    <!-- 상단: 로고 + 로그인/로그아웃/회원가입 -->
+    <div class="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
+        <!-- 로고 -->
+        <h1 class="text-3xl font-bold text-gray-800">
+            <a href="/main">Book Story</a>
+        </h1>
+
+        <!-- 로그인/로그아웃/회원가입 버튼 -->
+        <div class="flex space-x-4">
+            <a th:href="@{/user/login}" sec:authorize="isAnonymous()"
+               class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                로그인
+            </a>
+            <a th:href="@{/user/logout}" sec:authorize="isAuthenticated()"
+               class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                로그아웃
+            </a>
+            <a th:href="@{/user/signup}" sec:authorize="isAnonymous()"
+               class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                회원가입
+            </a>
+        </div>
+    </div>
+
+    <!-- 하단: 검색창 -->
+    <div class="flex justify-center">
+        <form action="/search" method="get" onsubmit="encodeSearchQuery()" class="flex w-full max-w-xl">
+            <input type="text" id="searchQuery" name="query" placeholder="책 검색"
+                   class="flex-grow px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                   required>
+            <button type="submit"
+                    class="px-6 py-2 bg-blue-600 text-white rounded-r-md hover:bg-blue-700 transition">
+                검색
+            </button>
+        </form>
+    </div>
+</header>

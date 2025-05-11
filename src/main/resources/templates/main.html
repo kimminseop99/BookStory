@@ -1,23 +1,7 @@
 <html layout:decorate="~{layout/layout}">
 <div layout:fragment="content">
     <div class="max-w-7xl mx-auto p-6">
-        <!-- 상단 헤더 -->
-        <div class="flex flex-col md:flex-row justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Book Story</h1>
-            <a th:href="@{/books/new}" class="mt-4 md:mt-0 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-                + 새 리뷰 작성
-            </a>
-        </div>
 
-        <!-- 검색 창 -->
-        <div class="mb-8 text-center">
-            <form action="/search" method="get" onsubmit="encodeSearchQuery()">
-                <input type="text" id="searchQuery" name="query" placeholder="책 검색" class="px-4 py-2 border rounded" required>
-                <button type="submit" class="px-6 py-2 ml-4 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-                    검색
-                </button>
-            </form>
-        </div>
 
         <!-- ✅ 슬라이드 컨테이너 크기 조정 -->
         <div class="swiper-container my-10 max-w-5xl mx-auto">

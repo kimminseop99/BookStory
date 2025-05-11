@@ -29,6 +29,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
 <body>
 
+<header th:replace="~{layout/header :: headerFragment}"></header>
 <!-- 각 페이지마다 들어가는 내용들 -->
 <div class="content-area">
     <th:block layout:fragment="content"></th:block>

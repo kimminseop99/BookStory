@@ -2,7 +2,6 @@ package com.example.BookStory.search;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -32,7 +31,7 @@ public class NaverBookApiService {
     }
 
 
-    public List<BookDto> searchBooks(String query) throws Exception {
+    public List<SearchBook> searchBooks(String query) throws Exception {
         String apiUrl = "https://openapi.naver.com/v1/search/book.json";
 
         URI uri = UriComponentsBuilder.fromHttpUrl(apiUrl)
@@ -59,15 +58,16 @@ public class NaverBookApiService {
         JsonNode rootNode = objectMapper.readTree(response.body());
         JsonNode itemsNode = rootNode.path("items");
 
-        List<BookDto> books = new ArrayList<>();
+        List<SearchBook> books = new ArrayList<>();
         for (JsonNode itemNode : itemsNode) {
-            BookDto bookDto = new BookDto();
-            bookDto.setTitle(itemNode.path("title").asText(""));
-            bookDto.setAuthor(itemNode.path("author").asText(""));
-            bookDto.setImage(itemNode.path("image").asText(""));
-            bookDto.setLink(itemNode.path("link").asText(""));
-            bookDto.setPublisher(itemNode.path("publisher").asText(""));
-            books.add(bookDto);
+            SearchBook searchBook = new SearchBook();
+            searchBook.setTitle(itemNode.path("title").asText(""));
+            searchBook.setAuthor(itemNode.path("author").asText(""));
+            searchBook.setImage(itemNode.path("image").asText(""));
+            searchBook.setLink(itemNode.path("link").asText(""));
+            searchBook.setPublisher(itemNode.path("publisher").asText(""));
+            searchBook.setDiscount(itemNode.path("discount").asInt());
+            books.add(searchBook);
         }
 
         return books;
