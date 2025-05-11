@@ -14,12 +14,11 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String isbn;
+    private Long id; // ISBN 대신 ID로 관리 (자동 생성)
 
-    private String title;
-    private String author;
-    private String image;
-
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
-    private List<Review> reviews;
+    private String title;   // 책 제목
+    private String author;  // 책 저자
+    private String content; // 책 내용
+    private String hashtags; // 책 해시태그
+    private String imageUrl;   // 책 이미지 URL
 }

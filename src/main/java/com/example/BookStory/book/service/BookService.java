@@ -26,4 +26,7 @@ public class BookService {
     }
 
 
+    public List<Book> getTopBooks() {
+        return bookRepository.findTop5ByOrderByIdDesc();
+    }
 }

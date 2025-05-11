@@ -1,16 +1,27 @@
-<html layout:decorate="~{layout}">
+<html layout:decorate="~{layout/layout}">
 <div layout:fragment="content">
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+<body class=" font-sans leading-normal tracking-normal">
 
 <div class="max-w-7xl mx-auto p-6">
-    <div class="flex justify-between items-center mb-8">
-        <h1 class="text-3xl font-bold text-gray-800">📚 검색된 도서 목록</h1>
+    <div>
+     <button onclick="history.back()"
+            class="px-2 py-2 text-gray-800 rounded hover:bg-gray-400 transition">
+         ← 뒤로가기
+        </button>
+    </div>
+    <div class="flex justify-center items-center mb-8">
+        <h1 class="text-2xl font-bold text-gray-800">
+        <span th:if="${searchQuery != null and books != null}"
+              th:text="|‘${searchQuery}’의 검색 결과 총 ${#lists.size(books)}건|">
+            검색어의 검색 결과 총 0건
+        </span>
+        </h1>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <!-- 도서 리스트 반복문 -->
         <div th:each="book : ${books}" class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition duration-300 flex flex-col">
-            <img th:src="${book.image}" alt="책 이미지" class="h-60 object-cover w-full"/>
+            <img th:src="${book.image}" alt="책 이미지" class="h-60 object-contain w-full"/>
             <div class="p-4 flex-grow flex flex-col justify-between">
                 <h2 class="text-lg font-semibold text-gray-800 mb-2" th:text="${book.title}">책 제목</h2>
                 <p class="text-gray-600 text-sm" th:text="${book.author}">저자</p>

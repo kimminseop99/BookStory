@@ -1,5 +1,6 @@
 package com.example.BookStory.main;
 
+
 import com.example.BookStory.book.entity.Book;
 import com.example.BookStory.book.service.BookService;
 import com.example.BookStory.search.BookDto;
@@ -29,8 +30,8 @@ public class MainController {
 
     @GetMapping("/main")
     public String showMainPage(Model model) {
-        List<Book> books = bookService.findAllBooks();
-        model.addAttribute("books", books);
+        List<Book> bookList = bookService.getTopBooks(); // 원하는 리스트 (예: 인기순, 최신순 등)
+        model.addAttribute("bookList", bookList);
         return "main"; // src/main/resources/templates/main.html
     }
 
@@ -39,7 +40,7 @@ public class MainController {
         try {
             // 쿼리 파라미터가 UTF-8로 URL 인코딩되어 있는지 확인하고, 디코딩 처리
             String decodedQuery = URLDecoder.decode(query, StandardCharsets.UTF_8.name());
-
+            model.addAttribute("searchQuery", decodedQuery); // ✅ 검색어 전달
             // NaverBookApiService에서 검색 결과 가져오기
             List<BookDto> bookList = naverBookApiService.searchBooks(decodedQuery);
 

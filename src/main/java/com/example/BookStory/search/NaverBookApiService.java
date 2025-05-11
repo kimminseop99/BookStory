@@ -37,7 +37,7 @@ public class NaverBookApiService {
 
         URI uri = UriComponentsBuilder.fromHttpUrl(apiUrl)
                 .queryParam("query", URLEncoder.encode(query, StandardCharsets.UTF_8.name()))
-                .queryParam("display", 10)
+                .queryParam("display", 100)
                 .queryParam("start", 1)
                 .queryParam("sort", "sim")
                 .build(true)
