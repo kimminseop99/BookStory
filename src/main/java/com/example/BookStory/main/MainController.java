@@ -30,8 +30,20 @@ public class MainController {
 
     @GetMapping("/main")
     public String showMainPage(Model model) {
-        List<Book> bookList = bookService.getTopBooks(); // 원하는 리스트 (예: 인기순, 최신순 등)
-        model.addAttribute("bookList", bookList);
+        List<Book> recommendedBooks = bookService.findByPersonalRecommendationTrue();
+        model.addAttribute("recommendedBooks", recommendedBooks);
+
+        List<Book> allBooks = bookService.findAllBooks();
+        List<Book> fictionBooks = bookService.findByCategory("소설");
+        List<Book> selfHelpBooks = bookService.findByCategory("자기계발");
+        List<Book> scienceBooks = bookService.findByCategory("과학");
+        List<Book> computerBooks = bookService.findByCategory("컴퓨터");
+
+        model.addAttribute("bookList", allBooks);
+        model.addAttribute("fictionBooks", fictionBooks);
+        model.addAttribute("selfHelpBooks", selfHelpBooks);
+        model.addAttribute("scienceBooks", scienceBooks);
+        model.addAttribute("computerBooks", computerBooks);
         return "main"; // src/main/resources/templates/main.html
     }
 

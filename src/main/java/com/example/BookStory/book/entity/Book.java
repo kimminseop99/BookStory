@@ -20,5 +20,9 @@ public class Book {
     private String author;  // 책 저자
     private String content; // 책 내용
     private String hashtags; // 책 해시태그
-    private String imageUrl;   // 책 이미지 URL
+    private String imageUrl; // 책 이미지 URL
+    private String category; // 책 카테고리
+
+    @Column(name = "is_personal_recommendation")
+    private Boolean personalRecommendation; //관리자 추천 유무
 }
