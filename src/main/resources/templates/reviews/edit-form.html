@@ -1,0 +1,39 @@
+<html layout:decorate="~{layout/layout}">
+<div layout:fragment="content">
+    <body class="bg-white text-gray-800 min-h-screen">
+    <div class="max-w-2xl mx-auto px-4 py-8">
+        <h1 class="text-2xl font-bold mb-4">✏️ 독후감 수정</h1>
+
+        <form th:action="@{/reviews/edit/{id}(id=${reviewId})}"
+              th:object="${bookReviewForm}" method="post" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium">제목</label>
+                <input type="text" th:field="*{title}" class="w-full border rounded px-3 py-2"/>
+                <p class="text-red-500 text-sm" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium">내용</label>
+                <textarea th:field="*{content}" rows="6" class="w-full border rounded px-3 py-2"></textarea>
+                <p class="text-red-500 text-sm" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
+            </div>
+
+            <div class="flex items-center space-x-2">
+                <input type="checkbox" th:field="*{secret}" class="w-4 h-4"/>
+                <label class="text-sm">비밀글로 설정</label>
+            </div>
+
+            <div class="flex justify-end space-x-2">
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    수정
+                </button>
+                <a th:href="@{/reviews/detail/{id}(id=${reviewId})}"
+                   class="text-gray-600 underline flex items-center px-3 py-2 hover:text-gray-900">
+                    취소
+                </a>
+            </div>
+        </form>
+    </div>
+    </body>
+</div>
+</html>

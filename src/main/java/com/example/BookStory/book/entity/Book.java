@@ -1,11 +1,8 @@
 package com.example.BookStory.book.entity;
 
-import com.example.BookStory.review.Review;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter

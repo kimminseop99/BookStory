@@ -2,6 +2,8 @@ package com.example.BookStory.user.controller;
 
 import com.example.BookStory.book.entity.Book;
 import com.example.BookStory.book.service.BookService;
+import com.example.BookStory.bookReview.entity.BookReview;
+import com.example.BookStory.bookReview.service.BookReviewService;
 import com.example.BookStory.user.entity.SiteUser;
 import com.example.BookStory.user.form.UserCreateForm;
 import com.example.BookStory.user.service.UserService;
@@ -12,6 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final BookReviewService bookReviewService;
 
     @GetMapping("/signup")
     public String signup(UserCreateForm userCreateForm) {
@@ -103,5 +110,45 @@ public class UserController {
 
         return "redirect:/user/login?resetSuccess";
     }
+
+    @GetMapping("/mypage")
+    public String myPage(Model model, Principal principal) {
+        SiteUser user = userService.getUserByUsername(principal.getName());
+        model.addAttribute("user", user);
+        return "user/mypage";
+    }
+
+    @GetMapping("/change-password")
+    public String changePasswordForm() {
+        return "user/change_password";
+    }
+
+    @PostMapping("/change-password")
+    public String changePassword(@RequestParam("oldPassword") String oldPassword,
+                                 @RequestParam("newPassword") String newPassword,
+                                 Principal principal,
+                                 RedirectAttributes redirectAttributes) {
+        try {
+            if(oldPassword.equals(newPassword)){
+                redirectAttributes.addFlashAttribute("errorMessage", "바꾸실려는 비밀번호가 기존 비밀번호와 동일합니다.");
+                return "redirect:/user/change-password";
+            }
+            userService.changePassword(principal.getName(), oldPassword, newPassword);
+            redirectAttributes.addFlashAttribute("successMessage", "비밀번호가 변경되었습니다.");
+            return "redirect:/user/mypage";
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/user/change-password";
+        }
+    }
+
+    @GetMapping("/my-reviews")
+    public String myReviews(Model model, Principal principal) {
+        SiteUser user = userService.getUserByUsername(principal.getName());
+        List<BookReview> myReviews = bookReviewService.getReviewsByUser(user);
+        model.addAttribute("myReviews", myReviews);
+        return "user/my_reviews";
+    }
+
 }
 

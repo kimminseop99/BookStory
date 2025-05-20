@@ -1,0 +1,31 @@
+<html layout:decorate="~{layout/layout}">
+<div layout:fragment="content" class="bg-gray-50 text-gray-900 min-h-screen">
+    <div class="max-w-2xl mx-auto px-4 py-10">
+        <h1 class="text-2xl font-bold mb-4">독후감 작성</h1>
+
+        <form th:action="@{/reviews/create}" method="post" th:object="${bookReviewForm}" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium">제목</label>
+                <input type="text" th:field="*{title}" class="w-full border rounded px-3 py-2"/>
+                <p class="text-red-500 text-sm" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium">내용</label>
+                <textarea th:field="*{content}" rows="6" class="w-full border rounded px-3 py-2"></textarea>
+                <p class="text-red-500 text-sm" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
+            </div>
+
+            <div class="flex items-center space-x-2">
+                <input type="checkbox" th:field="*{secret}" class="w-4 h-4"/>
+                <label class="text-sm">비밀글로 설정</label>
+            </div>
+
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                등록
+            </button>
+        </form>
+    </div>
+
+</div>
+</html>

@@ -1,0 +1,49 @@
+<html layout:decorate="~{layout/layout}">
+<div layout:fragment="content">
+    <body class="bg-white text-gray-800 min-h-screen">
+    <div class="max-w-2xl mx-auto px-4 py-8">
+        <h1 class="text-2xl font-bold mb-4"
+            th:text="${review.secret && #authentication.name != review.writer.username ? '비밀글입니다.' : review.title}">
+            독후감 제목
+        </h1>
+
+        <div class="text-sm text-gray-600 mb-2">
+            작성자: <span th:text="${review.writer.username}">작성자</span> |
+            작성일: <span th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+        </div>
+
+        <div class="mt-4 text-base whitespace-pre-line"
+             th:if="${!review.secret || #authentication.name == review.writer.username}"
+             th:text="${review.content}">
+            독후감 내용
+        </div>
+
+        <div th:if="${review.secret && #authentication.name != review.writer.username}"
+             class="text-red-600 font-semibold mt-4">
+            🔒 이 글은 비밀글입니다.
+        </div>
+
+        <div class="mt-6 flex justify-end space-x-4">
+            <a th:if="${#authentication.name == review.writer.username}"
+               th:href="@{/reviews/edit/{id}(id=${review.id})}"
+               class="text-blue-600 hover:underline font-semibold">
+                수정
+            </a>
+
+            <form th:if="${#authentication.name == review.writer.username}"
+                  th:action="@{/reviews/delete/{id}(id=${review.id})}" method="post">
+                <button type="submit"
+                        class="text-red-600 hover:underline font-semibold"
+                        onclick="return confirm('정말 삭제하시겠습니까?');">
+                    삭제
+                </button>
+            </form>
+
+            <a th:href="@{/reviews}" class="text-gray-700 hover:underline font-medium">
+                목록으로
+            </a>
+        </div>
+    </div>
+    </body>
+</div>
+</html>
