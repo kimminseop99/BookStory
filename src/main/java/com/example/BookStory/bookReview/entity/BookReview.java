@@ -34,8 +34,7 @@ public class BookReview {
 
     private LocalDateTime modifiedAt;
 
-    @ManyToOne
-    @JoinColumn(name = "writer_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private SiteUser writer;
 
     @OneToMany(mappedBy = "bookReview", cascade = CascadeType.ALL, orphanRemoval = true)

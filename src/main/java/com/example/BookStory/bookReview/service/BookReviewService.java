@@ -3,6 +3,7 @@ package com.example.BookStory.bookReview.service;
 import com.example.BookStory.bookReview.entity.BookReview;
 import com.example.BookStory.bookReview.repository.BookReviewRepository;
 import com.example.BookStory.user.entity.SiteUser;
+import com.example.BookStory.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class BookReviewService {
 
     private final BookReviewRepository bookReviewRepository;
+    private final UserRepository userRepository;
 
     public List<BookReview> findAll() {
         return bookReviewRepository.findAll();
@@ -24,15 +26,24 @@ public class BookReviewService {
         return bookReviewRepository.findById(id);
     }
 
-    public BookReview create(String title, String content, boolean secret, SiteUser writer) {
-        BookReview review = BookReview.builder()
+    public BookReview create(String title, String content, boolean secret, String writer) {
+        SiteUser persistentWriter = userRepository.findByusername(writer)
+                .orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
+
+        BookReview review = buildBookReview(title, content, secret, persistentWriter);
+        return bookReviewRepository.save(review);
+    }
+
+
+
+    private BookReview buildBookReview(String title, String content, boolean secret, SiteUser writer) {
+        return BookReview.builder()
                 .title(title)
                 .content(content)
                 .secret(secret)
-                .createdAt(LocalDateTime.now())
                 .writer(writer)
+                .createdAt(LocalDateTime.now())
                 .build();
-        return bookReviewRepository.save(review);
     }
 
     public void update(BookReview review, String title, String content, boolean secret) {
@@ -40,7 +51,7 @@ public class BookReviewService {
         review.setContent(content);
         review.setSecret(secret);
         review.setModifiedAt(LocalDateTime.now());
-        // 영속성 컨텍스트 내에서 변경 감지로 save() 생략 가능
+        bookReviewRepository.save(review);
     }
 
     public void delete(BookReview review) {

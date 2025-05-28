@@ -21,28 +21,24 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
+                        // 1. 인증 없이 접근 가능한 경로
                         .requestMatchers(
-                                "/",
-                                "/main",
-                                "/search",
-                                "/user/login",
-                                "/user/register",
-                                "/books",
-                                "/reviews",         // 리뷰 목록
-                                "/reviews/{id}",    // 리뷰 상세 보기
-                                "/css/**", "/js/**", "/images/**" // 정적 리소스
+                                "/", "/main", "/search",
+                                "/user/login", "/user/register",
+                                "/books", "/reviews", "/reviews/*", // 상세 리뷰 id 처리
+                                "/css/**", "/js/**", "/images/**"
                         ).permitAll()
 
-                        // 아래 두 URL은 로그인해야 접근 가능
+                        // 2. 로그인 해야 접근 가능한 경로
                         .requestMatchers(
-                                "/user/mypage",         // 마이페이지
-                                "/reviews/create",      // 리뷰 작성
-                                "/reviews/edit/**",     // 리뷰 수정
-                                "/reviews/delete/**"    // 리뷰 삭제
+                                "/user/mypage",
+                                "/reviews/create",
+                                "/reviews/edit/**",
+                                "/reviews/delete/**"
                         ).authenticated()
 
-                        // 그 외 모든 요청은 인증 필요
-                        .anyRequest().authenticated()
+                        // 3. 나머지 모든 경로도 접근 허용
+                        .anyRequest().permitAll()
                 ).csrf((csrf) -> csrf
                         .ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**")))
                 .headers((headers) -> headers

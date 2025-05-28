@@ -10,6 +10,8 @@ import com.example.BookStory.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -113,7 +116,7 @@ public class UserController {
 
     @GetMapping("/mypage")
     public String myPage(Model model, Principal principal) {
-        SiteUser user = userService.getUserByUsername(principal.getName());
+        SiteUser user = userService.findByUsername(principal.getName());
         model.addAttribute("user", user);
         return "user/mypage";
     }
@@ -144,7 +147,7 @@ public class UserController {
 
     @GetMapping("/my-reviews")
     public String myReviews(Model model, Principal principal) {
-        SiteUser user = userService.getUserByUsername(principal.getName());
+        SiteUser user = userService.findByUsername(principal.getName());
         List<BookReview> myReviews = bookReviewService.getReviewsByUser(user);
         model.addAttribute("myReviews", myReviews);
         return "user/my_reviews";

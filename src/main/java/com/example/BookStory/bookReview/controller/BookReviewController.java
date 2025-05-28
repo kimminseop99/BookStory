@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,32 +39,33 @@ public class BookReviewController {
 
     // 독후감 등록 처리
     @PostMapping("/create")
-    public String create(@Valid @ModelAttribute BookReviewForm bookReviewForm,
+    public String create(@Valid BookReviewForm bookReviewForm,
                          BindingResult bindingResult,
                          @AuthenticationPrincipal UserDetails userDetails) {
         if (bindingResult.hasErrors()) {
             return "reviews/form";
         }
 
-        SiteUser writer = new SiteUser();
-        writer.setUsername(userDetails.getUsername());
-
         bookReviewService.create(
                 bookReviewForm.getTitle(),
                 bookReviewForm.getContent(),
                 bookReviewForm.isSecret(),
-                writer
+                userDetails.getUsername()
         );
 
-        return "redirect:/reviews";
+        return "redirect:/reviews/list";
     }
+
+
 
     // 상세보기
     @GetMapping("/detail/{id}")
     public String detail(@PathVariable("id") Long id, Model model) {
+
         Optional<BookReview> reviewOpt = bookReviewService.findById(id);
+
         if (reviewOpt.isEmpty()) {
-            return "redirect:/reviews";  // 경로 오류 수정 (리뷰 목록 경로 통일)
+            return "redirect:/reviews/list";  // 경로 오류 수정 (리뷰 목록 경로 통일)
         }
 
         model.addAttribute("review", reviewOpt.get());
@@ -76,12 +78,12 @@ public class BookReviewController {
                            @AuthenticationPrincipal UserDetails userDetails) {
         Optional<BookReview> reviewOpt = bookReviewService.findById(id);
         if (reviewOpt.isEmpty()) {
-            return "redirect:/reviews";
+            return "redirect:/reviews/list";
         }
 
         BookReview review = reviewOpt.get();
         if (!review.getWriter().getUsername().equals(userDetails.getUsername())) {
-            return "redirect:/reviews";
+            return "redirect:/reviews/list";
         }
 
         BookReviewForm form = new BookReviewForm();
@@ -106,12 +108,12 @@ public class BookReviewController {
 
         Optional<BookReview> reviewOpt = bookReviewService.findById(id);
         if (reviewOpt.isEmpty()) {
-            return "redirect:/reviews";
+            return "redirect:/reviews/list";
         }
 
         BookReview review = reviewOpt.get();
         if (!review.getWriter().getUsername().equals(userDetails.getUsername())) {
-            return "redirect:/reviews";
+            return "redirect:/reviews/list";
         }
 
         bookReviewService.update(review, bookReviewForm.getTitle(), bookReviewForm.getContent(), bookReviewForm.isSecret());
@@ -124,15 +126,15 @@ public class BookReviewController {
                          @AuthenticationPrincipal UserDetails userDetails) {
         Optional<BookReview> reviewOpt = bookReviewService.findById(id);
         if (reviewOpt.isEmpty()) {
-            return "redirect:/reviews";
+            return "redirect:/reviews/list";
         }
 
         BookReview review = reviewOpt.get();
         if (!review.getWriter().getUsername().equals(userDetails.getUsername())) {
-            return "redirect:/reviews";
+            return "redirect:/reviews/list";
         }
 
         bookReviewService.delete(review);
-        return "redirect:/reviews";
+        return "redirect:/reviews/list";
     }
 }

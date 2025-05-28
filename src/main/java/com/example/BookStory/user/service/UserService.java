@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -45,27 +46,20 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public SiteUser getUser(String username) {
-        return (SiteUser) userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-    }
-
-    public SiteUser findByUsername(String name) {
-        return (SiteUser) userRepository.findByUsername(name)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-    }
-
-    public SiteUser getUserByUsername(String username) {
-        return (SiteUser) userRepository.findByUsername(username)
+    public SiteUser findByUsername(String username) {
+        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
     }
 
+
     public void changePassword(String username, String oldPassword, String newPassword) {
-        SiteUser user = getUserByUsername(username);
+        SiteUser user = findByUsername(username);
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");
         }
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
+
+
 }

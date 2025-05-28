@@ -1,16 +1,27 @@
 <html layout:decorate="~{layout/layout}">
-<div layout:fragment="content">
-    <body class="bg-white text-gray-800 min-h-screen">
+<div layout:fragment="content" class="bg-white text-gray-800 min-h-screen">
     <div class="max-w-2xl mx-auto px-4 py-8">
         <h1 class="text-2xl font-bold mb-4"
             th:text="${review.secret && #authentication.name != review.writer.username ? '비밀글입니다.' : review.title}">
             독후감 제목
         </h1>
 
-        <div class="text-sm text-gray-600 mb-2">
-            작성자: <span th:text="${review.writer.username}">작성자</span> |
-            작성일: <span th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+        <div class="flex items-center text-sm text-gray-600 mb-2 space-x-2">
+            <span>작성자: <span th:text="${review.writer.username}">작성자</span></span>
+            <span>|</span>
+            <span>작성일: <span th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span></span>
+            <span>|</span>
+            <span class="flex items-center space-x-1">
+            <span>비밀글 여부:</span>
+            <span th:if="${review.secret}">
+                <i data-lucide="lock" class="w-4 h-4 text-red-500"></i>
+            </span>
+            <span th:unless="${review.secret}">
+                <i data-lucide="unlock" class="w-4 h-4 text-green-500"></i>
+            </span>
+            </span>
         </div>
+
 
         <div class="mt-4 text-base whitespace-pre-line"
              th:if="${!review.secret || #authentication.name == review.writer.username}"
@@ -39,11 +50,15 @@
                 </button>
             </form>
 
-            <a th:href="@{/reviews}" class="text-gray-700 hover:underline font-medium">
+            <a th:href="@{/reviews/list}" class="text-gray-700 hover:underline font-medium">
                 목록으로
             </a>
         </div>
     </div>
-    </body>
+
+    <script>
+        lucide.createIcons();
+    </script>
+
 </div>
 </html>
