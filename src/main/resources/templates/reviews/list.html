@@ -1,59 +1,126 @@
 <html layout:decorate="~{layout/layout}">
 <div layout:fragment="content" class="bg-gradient-to-b from-blue-50 to-white text-gray-900 min-h-screen">
     <div class="container mx-auto px-4 py-16">
+
         <!-- 제목 -->
         <h1 class="text-5xl font-extrabold text-center mb-12 text-blue-800 drop-shadow-lg">
             독후감 목록
         </h1>
 
-        <!-- 독후감 쓰기 버튼 -->
-        <div class="flex justify-end mb-12 mx-4 md:mx-12 lg:mx-32">
-            <a th:href="@{/reviews/create}"
-               class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-500 to-blue-600 text-white rounded-full text-base font-semibold shadow-md hover:from-indigo-600 hover:to-blue-700 transition-all duration-300">
-                ✍️ 독후감 쓰기
-            </a>
-        </div>
+        <!-- 상단 영역: 네비게이션 + 검색+게시물 리스트 묶음 -->
+        <div class="flex flex-col md:flex-row gap-6">
 
-        <!-- 독후감 없을 때 메시지 -->
-        <div th:if="${#lists.isEmpty(reviewList)}" class="text-center text-gray-500 text-xl mt-20">
-            아직 등록된 독후감이 없어요. 🥲<br>
-            <span class="text-sm text-blue-400">지금 첫 번째 독후감을 남겨보세요!</span>
-        </div>
+            <!-- 해시태그 네비게이션 바 (왼쪽, sticky 처리) -->
+            <nav class="hidden md:block w-1/4 bg-white rounded-3xl shadow p-6 h-min sticky top-16">
+                <h2 class="text-lg font-bold mb-4 text-blue-700">인기 해시태그</h2>
+                <ul class="flex flex-wrap gap-3">
+                    <li>
+                        <a th:href="@{/reviews/list(query=${'Java'})}"
+                           class="block px-4 py-2 rounded-full bg-blue-100 text-blue-800 font-semibold hover:bg-blue-200 transition text-sm md:text-base">
+                            Java
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/reviews/list(query=${'SpringBoot'})}"
+                           class="block px-4 py-2 rounded-full bg-blue-100 text-blue-800 font-semibold hover:bg-blue-200 transition text-sm md:text-base">
+                            SpringBoot
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/reviews/list(query=${'AI'})}"
+                           class="block px-4 py-2 rounded-full bg-blue-100 text-blue-800 font-semibold hover:bg-blue-200 transition text-sm md:text-base">
+                            AI
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/reviews/list(query=${'MySQL'})}"
+                           class="block px-4 py-2 rounded-full bg-blue-100 text-blue-800 font-semibold hover:bg-blue-200 transition text-sm md:text-base">
+                            MySQL
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/reviews/list(query=${'Algorithm'})}"
+                           class="block px-4 py-2 rounded-full bg-blue-100 text-blue-800 font-semibold hover:bg-blue-200 transition text-sm md:text-base">
+                            Algorithm
+                        </a>
+                    </li>
+                </ul>
+            </nav>
 
-        <!-- 독후감 리스트 -->
-        <div th:if="${not #lists.isEmpty(reviewList)}"
-             class="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-4 md:px-8 lg:px-16">
-            <div th:each="review : ${reviewList}"
-                 class="bookreview-card bg-white rounded-3xl shadow-xl p-6 hover:shadow-2xl transition duration-300 border-t-4 border-blue-400 relative overflow-hidden flex flex-col">
+            <!-- 검색 + 독후감 리스트 묶음 (오른쪽) -->
+            <div class="flex flex-col w-full md:w-3/4 gap-6">
 
-                <!-- 비밀글 여부 표시 -->
-                <div th:if="${review.secret}"
-                     class="absolute top-0 right-0 bg-yellow-400 text-xs font-bold text-gray-800 px-2 py-1 rounded-bl-xl shadow select-none">
-                    🔒 비밀글
+                <!-- 상단: 검색창 + 독후감 작성 버튼 -->
+                <div class="flex justify-between rounded-full items-center w-full max-w-4xl">
+                    <form th:action="@{/reviews/list}" method="get" class="flex-grow flex">
+                        <input
+                                type="text"
+                                name="query"
+                                placeholder="제목, 내용 또는 해시태그로 검색하세요"
+                                class="w-full px-5 py-2 text-sm text-gray-700 focus:outline-none rounded-l-full border border-gray-300 "
+                                th:value="${query}">
+                        <button
+                                type="submit"
+                                class="flex items-center justify-center px-4 bg-white text-blue-600 hover:text-blue-800 transition rounded-r-full border border-gray-300 border-l-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 18.5a7.5 7.5 0 006.15-3.85z" />
+                            </svg>
+                        </button>
+                    </form>
+                    <a th:href="@{/reviews/create}"
+                       class="ml-6 inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-500 to-blue-600 text-white rounded-full text-base font-semibold shadow-md hover:from-indigo-600 hover:to-blue-700 transition-all duration-300 whitespace-nowrap">
+                        ✍️ 독후감 쓰기
+                    </a>
                 </div>
 
-                <!-- 제목 링크 -->
-                <a th:href="@{/reviews/detail/{id}(id=${review.id})}"
-                   th:text="${(review.secret && #authentication.name != review.writer.username) ? '비밀글입니다.' : review.title}"
-                   class="block text-lg font-bold text-blue-700 hover:underline truncate mb-3">
-                </a>
 
-                <!-- 작성자 및 날짜 -->
-                <div class="text-sm text-gray-600 space-y-1 mb-4">
-                    <div>👤 작성자: <span th:text="${review.writer.username}">작성자</span></div>
-                    <div>🗓 작성일: <span th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</span></div>
+                <!-- 독후감 리스트 -->
+                <div th:if="${not #lists.isEmpty(reviewList)}"
+                     class="mx-auto grid gap-10 grid-cols-3 px-4 max-w-full">
+                    <div th:each="review : ${reviewList}"
+                         class="bookreview-card bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition duration-300 border-t-4 border-blue-400 relative overflow-hidden flex flex-col">
+
+                        <!-- 비밀글 여부 표시 -->
+                        <div th:if="${review.secret}"
+                             class="absolute top-0 right-0 bg-yellow-400 text-xs font-bold text-gray-800 px-2 py-1 rounded-bl-xl shadow select-none">
+                            🔒 비밀글
+                        </div>
+
+                        <!-- 제목 링크 -->
+                        <a th:href="@{/reviews/detail/{id}(id=${review.id})}"
+                           th:text="${(review.secret && #authentication.name != review.writer.username) ? '비밀글입니다.' : review.title}"
+                           class="block text-xl font-bold text-blue-700 hover:underline truncate mb-4">
+                        </a>
+
+                        <!-- 작성자 및 날짜 -->
+                        <div class="text-sm text-gray-600 space-y-1 mb-6">
+                            <div>👤 작성자: <span th:text="${review.writer.username}">작성자</span></div>
+                            <div>🗓 작성일: <span th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</span></div>
+                        </div>
+
+                        <!-- 해시태그 -->
+                        <div class="mt-auto flex gap-2 pt-4 border-t border-blue-100 overflow-hidden">
+                            <span th:each="tag : ${#strings.arraySplit(review.hashtags, ',')}"
+                            th:text="${'#' + tag.trim()}"
+                            class="bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap overflow-hidden text-ellipsis max-w-[9rem]">
+                            </span>
+                        </div>
+
+                    </div>
                 </div>
 
-                <!-- 해시태그 -->
-                <div class="mt-auto flex flex-wrap gap-2 pt-3 border-t border-blue-100">
-                    <span th:each="tag : ${#strings.arraySplit(review.hashtags, ',')}"
-                          th:text="${'#' + tag.trim()}"
-                          class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full shadow select-none cursor-default">
-                        #해시태그
-                    </span>
+                <!-- 독후감 없을 때 메시지 -->
+                <div th:if="${#lists.isEmpty(reviewList)}" class="text-center text-gray-500 text-xl mt-20">
+                    아직 등록된 독후감이 없어요. <br>
+                    <span class="text-sm text-blue-400">지금 첫 번째 독후감을 남겨보세요!</span>
                 </div>
+
             </div>
+
         </div>
+
     </div>
 </div>
 </html>

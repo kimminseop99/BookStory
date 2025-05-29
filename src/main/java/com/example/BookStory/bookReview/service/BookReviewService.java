@@ -26,24 +26,32 @@ public class BookReviewService {
         return bookReviewRepository.findById(id);
     }
 
-    public BookReview create(String title, String content, boolean secret, String writer, String hashtags) {
-        SiteUser persistentWriter = userRepository.findByusername(writer)
+    public List<BookReview> searchReviews(String query) {
+        if (query == null || query.isBlank()) {
+            return bookReviewRepository.findAll();
+        }
+        return bookReviewRepository.findByKeyword(query.trim());
+    }
+
+
+    public BookReview create(String title, String content, boolean secret,String hashtags, String writer) {
+        SiteUser persistentWriter = userRepository.findByUsername(writer)
                 .orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
 
-        BookReview review = buildBookReview(title, content, secret, persistentWriter, hashtags);
+        BookReview review = buildBookReview(title, content, secret, hashtags, persistentWriter);
         return bookReviewRepository.save(review);
     }
 
 
 
-    private BookReview buildBookReview(String title, String content, boolean secret, SiteUser writer, String hashtags) {
+    private BookReview buildBookReview(String title, String content, boolean secret,String hashtags, SiteUser writer) {
         return BookReview.builder()
                 .title(title)
                 .content(content)
                 .secret(secret)
-                .writer(writer)
                 .createdAt(LocalDateTime.now())
                 .hashtags(hashtags)
+                .writer(writer)
                 .build();
     }
 

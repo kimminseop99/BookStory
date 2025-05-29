@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -24,9 +25,11 @@ public class BookReviewController {
     private final BookReviewService bookReviewService;
 
     // 리뷰 목록 페이지
-    @GetMapping("list")
-    public String list(Model model) {
-        model.addAttribute("reviewList", bookReviewService.findAll());
+    @GetMapping("/list")
+    public String list(@RequestParam(value = "query", required = false) String query, Model model) {
+        List<BookReview> searchReviews = bookReviewService.searchReviews(query);
+        model.addAttribute("reviewList",  searchReviews);
+        model.addAttribute("query", query);
         return "reviews/list";
     }
 
