@@ -50,6 +50,7 @@ public class BookReviewController {
                 bookReviewForm.getTitle(),
                 bookReviewForm.getContent(),
                 bookReviewForm.isSecret(),
+                bookReviewForm.getHashtags(),
                 userDetails.getUsername()
         );
 
@@ -90,6 +91,7 @@ public class BookReviewController {
         form.setTitle(review.getTitle());
         form.setContent(review.getContent());
         form.setSecret(review.isSecret());
+        form.setHashtags(review.getHashtags());
 
         model.addAttribute("bookReviewForm", form);
         model.addAttribute("reviewId", id);
@@ -116,7 +118,7 @@ public class BookReviewController {
             return "redirect:/reviews/list";
         }
 
-        bookReviewService.update(review, bookReviewForm.getTitle(), bookReviewForm.getContent(), bookReviewForm.isSecret());
+        bookReviewService.update(review, bookReviewForm.getTitle(), bookReviewForm.getContent(), bookReviewForm.isSecret(), bookReviewForm.getHashtags());
         return "redirect:/reviews/detail/" + id;
     }
 

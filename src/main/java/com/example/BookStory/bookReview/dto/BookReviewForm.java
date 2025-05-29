@@ -15,4 +15,7 @@ public class BookReviewForm {
     private String content;
 
     private boolean secret;
+
+    @NotBlank(message = "해시태그를 입력해주세요.")
+    private String hashtags;
 }

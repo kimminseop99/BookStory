@@ -4,29 +4,40 @@
         <h1 class="text-2xl font-bold mb-4">독후감 작성</h1>
 
         <form th:action="@{/reviews/create}" method="post" th:object="${bookReviewForm}" class="space-y-4">
+            <!-- 제목 -->
             <div>
                 <label class="block text-sm font-medium">제목</label>
                 <input type="text" th:field="*{title}" class="w-full border rounded px-3 py-2"/>
                 <p class="text-red-500 text-sm" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
             </div>
 
+            <!-- 내용 -->
             <div>
                 <label class="block text-sm font-medium">내용</label>
                 <textarea th:field="*{content}" rows="6" class="w-full border rounded px-3 py-2"></textarea>
                 <p class="text-red-500 text-sm" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
             </div>
 
+            <!-- 해시태그 -->
+            <div>
+                <label class="block text-sm font-medium">해시태그 (쉼표로 구분)</label>
+                <input type="text" th:field="*{hashtags}" placeholder="#자기계발, #책추천"
+                       class="w-full border rounded px-3 py-2"/>
+                <p class="text-red-500 text-sm" th:if="${#fields.hasErrors('hashtags')}" th:errors="*{hashtags}"></p>
+            </div>
+
+            <!-- 비밀글 -->
             <div class="flex items-center space-x-2">
                 <input type="checkbox" th:field="*{secret}" class="w-4 h-4"/>
                 <label class="text-sm">비밀글로 설정</label>
             </div>
 
+            <!-- 등록 버튼 -->
             <button type="submit"
                     class="w-full sm:w-auto bg-blue-600 text-white px-5 py-2 rounded-2xl hover:bg-blue-700 shadow-md transition duration-300 ease-in-out">
                 등록
             </button>
         </form>
     </div>
-
 </div>
 </html>

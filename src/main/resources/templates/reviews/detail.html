@@ -1,57 +1,67 @@
 <html layout:decorate="~{layout/layout}">
-<div layout:fragment="content" class="bg-white text-gray-800 min-h-screen">
-    <div class="max-w-2xl mx-auto px-4 py-8">
-        <h1 class="text-2xl font-bold mb-4"
-            th:text="${review.secret && #authentication.name != review.writer.username ? '비밀글입니다.' : review.title}">
+<div layout:fragment="content" class="bg-gradient-to-br from-white to-blue-50 text-gray-900 min-h-screen">
+    <div class="max-w-3xl mx-auto px-6 py-12">
+        <!-- 제목 -->
+        <h1 class="text-4xl font-extrabold text-blue-800 mb-6 text-center drop-shadow"
+            th:text="${review.secret && #authentication.name != review.writer.username ? '🔒 비밀글입니다.' : review.title}">
             독후감 제목
         </h1>
 
-        <div class="flex items-center text-sm text-gray-600 mb-2 space-x-2">
-            <span>작성자: <span th:text="${review.writer.username}">작성자</span></span>
+        <!-- 메타 정보 -->
+        <div class="flex flex-wrap justify-center gap-4 text-sm text-gray-600 mb-6">
+            <span class="flex items-center gap-1">👤 <span th:text="${review.writer.username}">작성자</span></span>
             <span>|</span>
-            <span>작성일: <span th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span></span>
+            <span class="flex items-center gap-1">🗓 <span th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span></span>
             <span>|</span>
-            <span class="flex items-center space-x-1">
-            <span>비밀글 여부:</span>
-            <span th:if="${review.secret}">
-                <i data-lucide="lock" class="w-4 h-4 text-red-500"></i>
-            </span>
-            <span th:unless="${review.secret}">
-                <i data-lucide="unlock" class="w-4 h-4 text-green-500"></i>
-            </span>
+            <span class="flex items-center gap-1">
+                <span>🔐 비밀글:</span>
+                <i th:if="${review.secret}" data-lucide="lock" class="w-4 h-4 text-red-500"></i>
+                <i th:unless="${review.secret}" data-lucide="unlock" class="w-4 h-4 text-green-500"></i>
             </span>
         </div>
 
+        <!-- 해시태그 -->
+        <div th:if="${review.hashtags != null}" class="flex flex-wrap justify-center gap-2 mb-6">
+                <span th:each="tag : ${#strings.arraySplit(review.hashtags, ',')}"
+                class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
+                <span th:text="${tag.trim()}">#예시태그</span>
+                </span>
+        </div>
 
-        <div class="mt-4 text-base whitespace-pre-line"
+
+        <!-- 본문 -->
+        <div class="mt-8 text-lg leading-relaxed bg-white p-6 rounded-2xl shadow-xl whitespace-pre-line border border-blue-100"
              th:if="${!review.secret || #authentication.name == review.writer.username}"
              th:text="${review.content}">
             독후감 내용
         </div>
 
+        <!-- 비밀글 안내 -->
         <div th:if="${review.secret && #authentication.name != review.writer.username}"
-             class="text-red-600 font-semibold mt-4">
-            🔒 이 글은 비밀글입니다.
+             class="text-center text-red-600 font-semibold mt-12 text-lg">
+            🔒 이 글은 비밀글입니다. 열람 권한이 없습니다.
         </div>
 
-        <div class="mt-6 flex justify-end space-x-4">
+        <!-- 버튼 영역 -->
+        <div class="mt-10 flex justify-center gap-6">
             <a th:if="${#authentication.name == review.writer.username}"
                th:href="@{/reviews/edit/{id}(id=${review.id})}"
-               class="text-blue-600 hover:underline font-semibold">
-                수정
+               class="px-5 py-2 bg-yellow-400 hover:bg-yellow-500 text-white font-semibold rounded-full shadow">
+                ✏️ 수정
             </a>
 
             <form th:if="${#authentication.name == review.writer.username}"
                   th:action="@{/reviews/delete/{id}(id=${review.id})}" method="post">
                 <button type="submit"
-                        class="text-red-600 hover:underline font-semibold"
+                        class="px-5 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full shadow"
                         onclick="return confirm('정말 삭제하시겠습니까?');">
-                    삭제
+                    🗑 삭제
                 </button>
             </form>
 
-            <a th:href="@{/reviews/list}" class="text-gray-700 hover:underline font-medium">
-                목록으로
+            <a th:href="@{/reviews/list}"
+               class="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded-full shadow">
+                📚 목록으로
             </a>
         </div>
     </div>
@@ -59,6 +69,5 @@
     <script>
         lucide.createIcons();
     </script>
-
 </div>
 </html>

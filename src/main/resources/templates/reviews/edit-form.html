@@ -1,28 +1,41 @@
 <html layout:decorate="~{layout/layout}">
-<div layout:fragment="content">
-    <body class="bg-white text-gray-800 min-h-screen">
+<div layout:fragment="content" class="bg-white text-gray-800 min-h-screen">
+
     <div class="max-w-2xl mx-auto px-4 py-8">
         <h1 class="text-2xl font-bold mb-4">✏️ 독후감 수정</h1>
 
         <form th:action="@{/reviews/edit/{id}(id=${reviewId})}"
               th:object="${bookReviewForm}" method="post" class="space-y-4">
+
+            <!-- 제목 -->
             <div>
                 <label class="block text-sm font-medium">제목</label>
                 <input type="text" th:field="*{title}" class="w-full border rounded px-3 py-2"/>
                 <p class="text-red-500 text-sm" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
             </div>
 
+            <!-- 내용 -->
             <div>
                 <label class="block text-sm font-medium">내용</label>
                 <textarea th:field="*{content}" rows="6" class="w-full border rounded px-3 py-2"></textarea>
                 <p class="text-red-500 text-sm" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
             </div>
 
+            <!-- 해시태그 -->
+            <div>
+                <label class="block text-sm font-medium">해시태그 (예: #자기계발, #독서)</label>
+                <input type="text" th:field="*{hashtags}" placeholder="#태그1, #태그2"
+                       class="w-full border rounded px-3 py-2"/>
+                <p class="text-red-500 text-sm" th:if="${#fields.hasErrors('hashtags')}" th:errors="*{hashtags}"></p>
+            </div>
+
+            <!-- 비밀글 체크박스 -->
             <div class="flex items-center space-x-2">
                 <input type="checkbox" th:field="*{secret}" class="w-4 h-4"/>
                 <label class="text-sm">비밀글로 설정</label>
             </div>
 
+            <!-- 버튼 -->
             <div class="flex justify-end space-x-2">
                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                     수정
@@ -34,6 +47,6 @@
             </div>
         </form>
     </div>
-    </body>
+
 </div>
 </html>

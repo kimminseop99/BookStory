@@ -39,4 +39,6 @@ public class BookReview {
 
     @OneToMany(mappedBy = "bookReview", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
+
+    private String hashtags; // 책 해시태그
 }
