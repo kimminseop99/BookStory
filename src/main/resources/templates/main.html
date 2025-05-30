@@ -1,7 +1,9 @@
 <html layout:decorate="~{layout/layout}">
 <div layout:fragment="content">
     <div class="max-w-7xl mx-auto p-6">
-
+        <script th:if="${message != null}" th:inline="javascript">
+            alert([[${message}]]);
+        </script>
 
         <!-- ✅ 슬라이드 컨테이너 크기 조정 -->
         <div class="swiper-container my-10 max-w-5xl mx-auto">

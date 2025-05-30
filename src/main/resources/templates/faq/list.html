@@ -1,0 +1,11 @@
+<html layout:decorate="~{layout/layout}">
+<div layout:fragment="content" class="bg-gradient-to-br from-white to-blue-50 text-gray-900 min-h-screen">
+    <h1 class="text-2xl font-bold mb-4">자주 묻는 질문</h1>
+    <ul>
+        <li th:each="faq : ${faqList}" class="mb-2">
+            <a th:href="@{/faq/view/{id}(id=${faq.id})}" class="text-blue-600 hover:underline">[[${faq.question}]]</a>
+        </li>
+    </ul>
+
+</div>
+</html>

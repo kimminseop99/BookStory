@@ -1,0 +1,25 @@
+<html layout:decorate="~{layout/layout}">
+<div layout:fragment="content" class="bg-gradient-to-br from-white to-blue-50 text-gray-900 min-h-screen">
+<div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-md p-8">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">문의 상세 보기</h1>
+
+    <div class="mb-4">
+        <label class="block text-sm text-gray-600 font-semibold mb-1">제목</label>
+        <p class="text-lg text-gray-900" th:text="${inquiry.title}">문의 제목</p>
+    </div>
+
+    <div class="mb-4">
+        <label class="block text-sm text-gray-600 font-semibold mb-1">내용</label>
+        <div class="text-base text-gray-900 whitespace-pre-line bg-gray-50 rounded-xl p-4 border" th:text="${inquiry.content}">
+            문의 내용
+        </div>
+    </div>
+
+    <div class="mt-6 text-right">
+        <a href="/inquiry/my" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+            목록으로
+        </a>
+    </div>
+</div>
+</div>
+</html>

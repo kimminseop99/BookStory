@@ -25,8 +25,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/", "/main", "/search",
                                 "/user/login", "/user/register",
-                                "/books", "/reviews", "/reviews/*", // 상세 리뷰 id 처리
-                                "/css/**", "/js/**", "/images/**"
+                                "/books"
                         ).permitAll()
 
                         // 2. 로그인 해야 접근 가능한 경로
@@ -34,13 +33,16 @@ public class SecurityConfig {
                                 "/user/mypage",
                                 "/reviews/create",
                                 "/reviews/edit/**",
-                                "/reviews/delete/**"
+                                "/reviews/delete/**",
+                                "/support/index"
                         ).authenticated()
 
                         // 3. 나머지 모든 경로도 접근 허용
                         .anyRequest().permitAll()
-                ).csrf((csrf) -> csrf
-                        .ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**")))
+                ).csrf(csrf -> csrf
+                .ignoringRequestMatchers(
+                        new AntPathRequestMatcher("/h2-console/**"),
+                        new AntPathRequestMatcher("/api/chatbot/**")))
                 .headers((headers) -> headers
                         .addHeaderWriter(new XFrameOptionsHeaderWriter(
                                 XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))

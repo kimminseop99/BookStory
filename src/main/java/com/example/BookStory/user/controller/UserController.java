@@ -7,11 +7,16 @@ import com.example.BookStory.bookReview.service.BookReviewService;
 import com.example.BookStory.user.entity.SiteUser;
 import com.example.BookStory.user.form.UserCreateForm;
 import com.example.BookStory.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -62,7 +67,7 @@ public class UserController {
             model.addAttribute("alertMessage", "회원가입 중 오류가 발생했습니다: " + e.getMessage());
             return "user/signup_form";
         }
-        return "redirect:/";
+        return "redirect:/user/login";
     }
 
     @GetMapping("/login")
@@ -152,6 +157,20 @@ public class UserController {
         model.addAttribute("myReviews", myReviews);
         return "user/my_reviews";
     }
+
+    @PostMapping("/delete")
+    public String deleteUser(Principal principal, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
+        String username = principal.getName();
+        userService.deleteByUsername(username);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null){
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+        redirectAttributes.addFlashAttribute("message", "탈퇴가 완료되었습니다.");
+        return "redirect:/main";
+    }
+
 
 }
 

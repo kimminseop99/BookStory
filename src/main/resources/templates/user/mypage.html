@@ -19,6 +19,15 @@
                class="bg-blue-100 text-blue-700 px-5 py-3 rounded-lg font-medium text-center hover:bg-blue-200 transition">
                 내가 쓴 독후감
             </a>
+            <a href="/inquiry/my"
+               class="bg-blue-100 text-blue-700 px-5 py-3 rounded-lg font-medium text-center hover:bg-blue-200 transition">
+                나의 문의
+            </a>
+            <form th:action="@{/user/delete}" method="post" onsubmit="return confirm('정말로 탈퇴하시겠습니까?')">
+                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600">
+                    회원 탈퇴
+                </button>
+            </form>
         </div>
     </div>
 </div>

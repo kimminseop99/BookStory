@@ -1,0 +1,12 @@
+<html layout:decorate="~{layout/layout}">
+<div layout:fragment="content" class="bg-gradient-to-br from-white to-blue-50 text-gray-900 min-h-screen">
+
+    <h1 class="text-xl font-bold mb-4">1:1 문의 작성</h1>
+    <form th:action="@{/inquiry/form}" method="post" th:object="${inquiry}" class="space-y-4">
+        <input type="text" th:field="*{title}" placeholder="제목" class="w-full p-2 border rounded" />
+        <textarea th:field="*{content}" placeholder="문의 내용" rows="5" class="w-full p-2 border rounded"></textarea>
+        <label class="block"><input type="checkbox" th:field="*{private}" class="mr-1"/> 비공개 문의</label>
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">제출</button>
+    </form>
+</div>
+</html>
