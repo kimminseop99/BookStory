@@ -70,11 +70,28 @@
                         </button>
                     </form>
                     <a th:href="@{/reviews/create}"
-                       class="ml-6 inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-500 to-blue-600 text-white rounded-full text-base font-semibold shadow-md hover:from-indigo-600 hover:to-blue-700 transition-all duration-300 whitespace-nowrap">
-                        ✍️ 독후감 쓰기
+                       class="ml-6 inline-flex items-center gap-2 px-6 py-3 text-white rounded-full text-base font-semibold shadow-md bg-blue-600 whitespace-nowrap">
+                        독후감 쓰기
                     </a>
                 </div>
 
+                <div class="flex gap-4 mb-6 justify-center">
+                    <a th:href="@{/reviews/list(sort='latest', query=${query})}"
+                       class="px-4 py-2 rounded-full text-sm font-semibold"
+                       th:classappend="${sort == 'latest'} ? ' bg-blue-600 text-white' : ' bg-gray-200 text-gray-700'">
+                        최신순
+                    </a>
+                    <a th:href="@{/reviews/list(sort='views', query=${query})}"
+                       class="px-4 py-2 rounded-full text-sm font-semibold"
+                       th:classappend="${sort == 'views'} ? ' bg-blue-600 text-white' : ' bg-gray-200 text-gray-700'">
+                        조회수순
+                    </a>
+                    <a th:href="@{/reviews/list(sort='votes', query=${query})}"
+                       class="px-4 py-2 rounded-full text-sm font-semibold"
+                       th:classappend="${sort == 'votes'} ? ' bg-blue-600 text-white' : ' bg-gray-200 text-gray-700'">
+                        공감순
+                    </a>
+                </div>
 
                 <!-- 독후감 리스트 -->
                 <div th:if="${not #lists.isEmpty(reviewList)}"
@@ -98,6 +115,8 @@
                         <div class="text-sm text-gray-600 space-y-1 mb-6">
                             <div>👤 작성자: <span th:text="${review.writer.username}">작성자</span></div>
                             <div>🗓 작성일: <span th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</span></div>
+                            <div>👁️ 조회수: <span th:text="${review.viewCount}">0</span>    ❤  ️공감수: <span th:text="${review.voter.size()}">0</span></div>
+
                         </div>
 
                         <!-- 해시태그 -->

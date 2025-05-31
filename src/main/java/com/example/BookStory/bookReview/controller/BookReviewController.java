@@ -4,8 +4,10 @@ import com.example.BookStory.bookReview.dto.BookReviewForm;
 import com.example.BookStory.bookReview.entity.BookReview;
 import com.example.BookStory.bookReview.service.BookReviewService;
 import com.example.BookStory.user.entity.SiteUser;
+import com.example.BookStory.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,15 +26,33 @@ import java.util.Optional;
 public class BookReviewController {
 
     private final BookReviewService bookReviewService;
+    private final UserService userService;
 
     // 리뷰 목록 페이지
     @GetMapping("/list")
-    public String list(@RequestParam(value = "query", required = false) String query, Model model) {
-        List<BookReview> searchReviews = bookReviewService.searchReviews(query);
-        model.addAttribute("reviewList",  searchReviews);
+    public String list(@RequestParam(value = "query", required = false) String query,
+                       @RequestParam(value = "sort", required = false, defaultValue = "latest") String sort,
+                       Model model) {
+
+        List<BookReview> reviews;
+
+        switch(sort) {
+            case "views":
+                reviews = bookReviewService.findAllOrderByViewCountDesc(query);
+                break;
+            case "votes":
+                reviews = bookReviewService.findAllOrderByVotesDesc(query);
+                break;
+            default:
+                reviews = bookReviewService.searchReviews(query);
+        }
+
+        model.addAttribute("reviewList", reviews);
         model.addAttribute("query", query);
+        model.addAttribute("sort", sort);
         return "reviews/list";
     }
+
 
     // 독후감 작성 폼
     @GetMapping("/create")
@@ -72,6 +92,10 @@ public class BookReviewController {
         if (reviewOpt.isEmpty()) {
             return "redirect:/reviews/list";  // 경로 오류 수정 (리뷰 목록 경로 통일)
         }
+
+        BookReview review = reviewOpt.get();
+        review.increaseViewCount();
+        bookReviewService.save(review);
 
         model.addAttribute("review", reviewOpt.get());
         return "reviews/detail";
@@ -143,4 +167,21 @@ public class BookReviewController {
         bookReviewService.delete(review);
         return "redirect:/reviews/list";
     }
+
+    @PostMapping("/vote/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String vote(@PathVariable("id") Long id,
+                       @AuthenticationPrincipal UserDetails userDetails) {
+        Optional<BookReview> reviewOpt = bookReviewService.findById(id);
+        if (reviewOpt.isEmpty()) {
+            return "redirect:/reviews/list";
+        }
+
+        BookReview review = reviewOpt.get();
+        SiteUser user = userService.getUser(userDetails.getUsername());
+
+        bookReviewService.vote(review, user);  // 추천 처리
+        return "redirect:/reviews/detail/" + id;
+    }
+
 }

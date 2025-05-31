@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -30,6 +31,7 @@ public class BookReview {
     @Column(name = "is_secret")
     private boolean secret;
 
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime modifiedAt;
@@ -41,4 +43,14 @@ public class BookReview {
     private List<Comment> comments;
 
     private String hashtags; // 책 해시태그
+
+    @ManyToMany
+    private Set<SiteUser> voter;
+
+    @Column(nullable = false)
+    private int viewCount = 0;
+
+    public void increaseViewCount(){
+        this.viewCount += 1;
+    }
 }

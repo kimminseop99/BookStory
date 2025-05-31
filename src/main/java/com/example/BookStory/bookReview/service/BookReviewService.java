@@ -5,7 +5,9 @@ import com.example.BookStory.bookReview.repository.BookReviewRepository;
 import com.example.BookStory.user.entity.SiteUser;
 import com.example.BookStory.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,7 +30,7 @@ public class BookReviewService {
 
     public List<BookReview> searchReviews(String query) {
         if (query == null || query.isBlank()) {
-            return bookReviewRepository.findAll();
+            return bookReviewRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
         }
         return bookReviewRepository.findByKeyword(query.trim());
     }
@@ -72,4 +74,31 @@ public class BookReviewService {
         return bookReviewRepository.findByWriter(user);
 
     }
+
+    public BookReview save(BookReview review) {
+        return bookReviewRepository.save(review);
+    }
+
+    @Transactional
+    public void vote(BookReview review, SiteUser user) {
+        if (!review.getVoter().contains(user)) {
+            review.getVoter().add(user);
+            bookReviewRepository.save(review);
+        }
+    }
+
+    public List<BookReview> findAllOrderByViewCountDesc(String query) {
+        if (query == null || query.isBlank()) {
+            return bookReviewRepository.findAllByOrderByViewCountDesc();
+        }
+        return bookReviewRepository.findByKeywordOrderByViewCountDesc(query.trim());
+    }
+
+    public List<BookReview> findAllOrderByVotesDesc(String query) {
+        if (query == null || query.isBlank()) {
+            return bookReviewRepository.findAllByOrderByVoterSizeDesc();
+        }
+        return bookReviewRepository.findByKeywordOrderByVoterSizeDesc(query.trim());
+    }
+
 }

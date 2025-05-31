@@ -1,31 +1,49 @@
 <html layout:decorate="~{layout/layout}">
-<div layout:fragment="content" class="container mx-auto px-4 py-12">
-    <h1 class="text-3xl font-extrabold text-blue-700 mb-6 flex items-center gap-2">
-         마이페이지
-    </h1>
+<div layout:fragment="content" class="bg-gradient-to-br from-blue-50 to-white min-h-screen py-12 px-4 sm:px-8">
+    <div class="max-w-3xl mx-auto">
+        <h1 class="text-4xl font-bold text-black-800 mb-10 flex items-center gap-3">
+            <svg class="w-12 h-12 text-black-700" fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M5.121 17.804A13.937 13.937 0 0112 15c2.21 0 4.287.534 6.121 1.48M15 11a3 3 0 11-6 0 3 3 0 016 0zm-3 10c4.418 0 8-3.582 8-8S16.418 5 12 5 4 8.582 4 13s3.582 8 8 8z"></path>
+            </svg>
+            마이페이지
+        </h1>
 
-    <div class="space-y-6">
-        <div class="p-6 bg-white rounded-2xl shadow-md">
-            <p class="text-gray-700 text-base"><strong class="text-gray-800">아이디:</strong> <span th:text="${user.username}"></span></p>
-            <p class="text-gray-700 text-base"><strong class="text-gray-800">이메일:</strong> <span th:text="${user.email}"></span></p>
+        <!-- 유저 정보 카드 -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mb-8 space-y-2 transition hover:shadow-xl">
+            <p class="text-gray-800 text-lg">
+                <span class="font-semibold text-blue-600">아이디:</span>
+                <span th:text="${user.username}"></span>
+            </p>
+            <p class="text-gray-800 text-lg">
+                <span class="font-semibold text-blue-600">이메일:</span>
+                <span th:text="${user.email}"></span>
+            </p>
         </div>
 
-        <div class="flex flex-col sm:flex-row gap-4">
+        <!-- 액션 버튼들 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
             <a href="/user/change-password"
-               class="bg-blue-500 text-white px-5 py-3 rounded-lg font-medium text-center hover:bg-blue-600 transition">
-                비밀번호 변경
+               class="bg-blue-500 text-white p-4 rounded-xl text-center font-semibold shadow-md hover:bg-blue-600 transition duration-300">
+                🔒 비밀번호 변경
             </a>
+
             <a href="/user/my-reviews"
-               class="bg-blue-100 text-blue-700 px-5 py-3 rounded-lg font-medium text-center hover:bg-blue-200 transition">
-                내가 쓴 독후감
+               class="bg-green-100 text-green-800 p-4 rounded-xl text-center font-semibold shadow-md hover:bg-green-200 transition duration-300">
+                📚 내가 쓴 독후감
             </a>
+
             <a href="/inquiry/my"
-               class="bg-blue-100 text-blue-700 px-5 py-3 rounded-lg font-medium text-center hover:bg-blue-200 transition">
-                나의 문의
+               class="bg-yellow-100 text-yellow-800 p-4 rounded-xl text-center font-semibold shadow-md hover:bg-yellow-200 transition duration-300">
+                💬 나의 문의
             </a>
-            <form th:action="@{/user/delete}" method="post" onsubmit="return confirm('정말로 탈퇴하시겠습니까?')">
-                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600">
-                    회원 탈퇴
+
+            <form th:action="@{/user/delete}" method="post" onsubmit="return confirm('정말로 탈퇴하시겠습니까?')"
+                  class="w-full">
+                <button type="submit"
+                        class="w-full bg-red-500 text-white p-4 rounded-xl font-semibold shadow-md hover:bg-red-600 transition duration-300">
+                    ❌ 회원 탈퇴
                 </button>
             </form>
         </div>

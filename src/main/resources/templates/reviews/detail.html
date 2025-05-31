@@ -1,6 +1,7 @@
 <html layout:decorate="~{layout/layout}">
 <div layout:fragment="content" class="bg-gradient-to-br from-white to-blue-50 text-gray-900 min-h-screen">
-    <div class="max-w-3xl mx-auto px-6 py-12">
+    <div class="max-w-3xl mx-auto px-6 py-12 relative">
+
         <!-- 제목 -->
         <h1 class="text-4xl font-extrabold text-blue-800 mb-6 text-center drop-shadow"
             th:text="${review.secret && #authentication.name != review.writer.username ? '🔒 비밀글입니다.' : review.title}">
@@ -18,16 +19,17 @@
                 <i th:if="${review.secret}" data-lucide="lock" class="w-4 h-4 text-red-500"></i>
                 <i th:unless="${review.secret}" data-lucide="unlock" class="w-4 h-4 text-green-500"></i>
             </span>
+            <span>|</span>
+            <span class="flex items-center gap-1">👁️ <span th:text="${review.viewCount}">0</span></span>
         </div>
 
         <!-- 해시태그 -->
         <div th:if="${review.hashtags != null}" class="flex flex-wrap justify-center gap-2 mb-6">
-                <span th:each="tag : ${#strings.arraySplit(review.hashtags, ',')}"
-                class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
+            <span th:each="tag : ${#strings.arraySplit(review.hashtags, ',')}"
+                  class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
                 <span th:text="${tag.trim()}">#예시태그</span>
-                </span>
+            </span>
         </div>
-
 
         <!-- 본문 -->
         <div class="mt-8 text-lg leading-relaxed bg-white p-6 rounded-2xl shadow-xl whitespace-pre-line border border-blue-100"
@@ -42,8 +44,26 @@
             🔒 이 글은 비밀글입니다. 열람 권한이 없습니다.
         </div>
 
+        <!-- 공감 버튼 및 수 -->
+        <div class="mt-10 flex justify-center"  sec:authorize="isAuthenticated()" th:if="${!review.secret}">
+            <form th:action="@{/reviews/vote/{id}(id=${review.id})}" method="post"
+                  th:if="${#authentication.name != null and #authentication.name != review.writer.username}">
+                <button type="submit"
+                        class="flex items-center gap-2 px-6 py-2 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-full shadow transition">
+                    ❤️ 공감하기
+                    <span class="text-white font-medium text-base"
+                          th:text="${review.voter.size()}">0</span>
+                </button>
+            </form>
+            <div th:if="${#authentication.name == review.writer.username}"
+                 class="text-sm text-gray-500 font-semibold flex items-center gap-1">
+                ❤️ 공감 수: <span th:text="${review.voter.size()}">0</span>
+            </div>
+        </div>
+
+
         <!-- 버튼 영역 -->
-        <div class="mt-10 flex justify-center gap-6">
+        <div class="mt-10 flex justify-center gap-6 items-center">
             <a th:if="${#authentication.name == review.writer.username}"
                th:href="@{/reviews/edit/{id}(id=${review.id})}"
                class="px-5 py-2 bg-yellow-400 hover:bg-yellow-500 text-white font-semibold rounded-full shadow">
@@ -63,6 +83,8 @@
                class="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded-full shadow">
                 📚 목록으로
             </a>
+
+
         </div>
     </div>
 
