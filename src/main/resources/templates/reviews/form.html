@@ -21,7 +21,7 @@
             <!-- 해시태그 -->
             <div>
                 <label class="block text-sm font-medium">해시태그 (쉼표로 구분)</label>
-                <input type="text" th:field="*{hashtags}" placeholder="#자기계발, #책추천"
+                <input type="text" th:field="*{hashtags}" placeholder="자기계발, 책추천"
                        class="w-full border rounded px-3 py-2"/>
                 <p class="text-red-500 text-sm" th:if="${#fields.hasErrors('hashtags')}" th:errors="*{hashtags}"></p>
             </div>

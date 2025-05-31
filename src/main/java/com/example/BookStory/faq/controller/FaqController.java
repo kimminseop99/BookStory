@@ -21,7 +21,7 @@ public class FaqController {
     }
 
     @GetMapping("/view/{id}")
-    public String viewFaq(@PathVariable Long id, Model model) {
+    public String viewFaq(@PathVariable(value = "id") Long id, Model model) {
         model.addAttribute("faq", faqService.getFaq(id));
         return "faq/view";
     }

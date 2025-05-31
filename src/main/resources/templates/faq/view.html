@@ -1,9 +1,18 @@
 <html layout:decorate="~{layout/layout}">
-<div layout:fragment="content" class="bg-gradient-to-br from-white to-blue-50 text-gray-900 min-h-screen">
+<div layout:fragment="content" class="bg-gradient-to-br from-white to-blue-50 text-gray-900 min-h-screen p-6">
+    <div class="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow-md">
+        <h2 class="text-2xl font-bold mb-4 text-blue-600">[[${faq.question}]]</h2>
 
-    <h2 class="text-xl font-semibold">[[${faq.question}]]</h2>
-    <p class="mt-2">[[${faq.answer}]]</p>
-    <a href="/faq/list" class="mt-4 inline-block text-blue-600 hover:underline">← 목록으로</a>
+        <p class="text-gray-800 leading-relaxed mb-6 whitespace-pre-line">[[${faq.answer}]]</p>
 
+        <div class="text-sm text-gray-500 mb-4">
+            카테고리: <span class="font-medium">[[${faq.category}]]</span>
+        </div>
+
+        <a href="/faq/list"
+           class="inline-block text-blue-600 hover:underline hover:text-blue-800 transition duration-150">
+            ← 목록으로 돌아가기
+        </a>
+    </div>
 </div>
 </html>

@@ -1,31 +1,32 @@
 <html layout:decorate="~{layout/layout}">
-<div layout:fragment="content" class="bg-gradient-to-br from-white to-blue-50 text-gray-900 min-h-screen p-6 max-w-2xl mx-auto">
+<div layout:fragment="content" class="bg-gradient-to-br from-white to-blue-50 text-gray-900 min-h-screen p-6">
     <h2 class="text-xl font-bold mb-2">실시간 채팅상담</h2>
     <div id="chat-box" class="h-64 overflow-y-auto border p-2 mb-2 bg-gray-50 rounded"></div>
     <input type="text" id="chat-input" class="border p-2 w-full rounded" placeholder="메시지를 입력하세요" />
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
-    <script>
-        const socket = new SockJS('/ws-chat');
-        const stompClient = Stomp.over(socket);
+    <script th:inline="javascript">
+        const currentUsername = [[${username}]];
+       const socket = new SockJS('/ws-chat');
+       const stompClient = Stomp.over(socket);
 
-        stompClient.connect({}, function () {
-          stompClient.subscribe('/topic/public', function (message) {
-            const content = JSON.parse(message.body);
-            const chatBox = document.getElementById('chat-box');
-            chatBox.innerHTML += `<div><b>${content.sender}</b>: ${content.message}</div>`;
-          });
+       stompClient.connect({}, function () {
+         stompClient.subscribe('/topic/public', function (message) {
+           const content = JSON.parse(message.body);
+           const chatBox = document.getElementById('chat-box');
+           chatBox.innerHTML += `<div><b>${content.sender}</b>: ${content.message}</div>`;
+         });
 
-          document.getElementById('chat-input').addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') {
-              stompClient.send("/app/chat.send", {}, JSON.stringify({
-                sender: '고객',
-                message: e.target.value
-              }));
-              e.target.value = '';
-            }
-          });
-        });
+         document.getElementById('chat-input').addEventListener('keydown', function (e) {
+           if (e.key === 'Enter') {
+             stompClient.send("/app/chat.send", {}, JSON.stringify({
+               sender: currentUsername,
+               message: e.target.value
+             }));
+             e.target.value = '';
+           }
+         });
+       });
     </script>
 </div>
 </html>
