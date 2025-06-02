@@ -26,77 +26,40 @@ public class CommentController {
 
     private final CommentService commentService;
     private final BookReviewService bookReviewService;
+    private final UserService userService;
 
-    @PostMapping("/create/{reviewId}")
-    public String createComment(@PathVariable Long reviewId,
+    @PostMapping("/create/{id}")
+    public String createComment(@PathVariable("id") Long reviewId,
                                 @Valid @ModelAttribute CommentForm commentForm,
                                 BindingResult bindingResult,
-                                @AuthenticationPrincipal UserDetails userDetails) {
+                                Principal principal) {
 
         Optional<BookReview> reviewOpt = bookReviewService.findById(reviewId);
-        if (reviewOpt.isEmpty()) return "redirect:/reviews";
+        if (reviewOpt.isEmpty()) return "redirect:/reviews/list";
 
         if (bindingResult.hasErrors()) {
-            return "redirect:/reviews/" + reviewId; // 임시
+            return "redirect:/reviews/detail" + reviewId; // 임시
         }
 
-        SiteUser writer = new SiteUser();
-        writer.setUsername(userDetails.getUsername());
-
+        SiteUser writer = userService.getUser(principal.getName());
         commentService.create(commentForm.getContent(), writer, reviewOpt.get());
 
-        return "redirect:/reviews/" + reviewId;
+        return "redirect:/reviews/detail/" + reviewId;
     }
 
-    @PostMapping("/delete/{commentId}")
-    public String deleteComment(@PathVariable Long commentId,
+    @PostMapping("/delete/{id}")
+    public String deleteComment(@PathVariable("id") Long commentId,
                                 @AuthenticationPrincipal UserDetails userDetails) {
         Optional<Comment> commentOpt = commentService.findById(commentId);
-        if (commentOpt.isEmpty()) return "redirect:/reviews";
+        if (commentOpt.isEmpty()) return "redirect:/reviews/detail";
 
         Comment comment = commentOpt.get();
         if (!comment.getWriter().getUsername().equals(userDetails.getUsername())) {
-            return "redirect:/reviews";
+            return "redirect:/reviews/detail";
         }
 
         commentService.delete(comment);
-        return "redirect:/reviews/" + comment.getBookReview().getId();
-    }
-
-    @GetMapping("/edit/{commentId}")
-    public String editCommentForm(@PathVariable Long commentId, Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        Optional<Comment> commentOpt = commentService.findById(commentId);
-        if (commentOpt.isEmpty()) return "redirect:/reviews";
-
-        Comment comment = commentOpt.get();
-        if (!comment.getWriter().getUsername().equals(userDetails.getUsername())) {
-            return "redirect:/reviews";
-        }
-
-        model.addAttribute("commentForm", new CommentForm());
-        model.addAttribute("commentId", commentId);
-        return "comment/edit-form"; // 댓글 수정 폼을 위한 뷰
-    }
-
-    @PostMapping("/edit/{commentId}")
-    public String editComment(@PathVariable Long commentId,
-                              @Valid @ModelAttribute CommentForm commentForm,
-                              BindingResult bindingResult,
-                              @AuthenticationPrincipal UserDetails userDetails) {
-        if (bindingResult.hasErrors()) {
-            return "redirect:/reviews/" + commentId;
-        }
-
-        Optional<Comment> commentOpt = commentService.findById(commentId);
-        if (commentOpt.isEmpty()) return "redirect:/reviews";
-
-        Comment comment = commentOpt.get();
-        if (!comment.getWriter().getUsername().equals(userDetails.getUsername())) {
-            return "redirect:/reviews";
-        }
-
-        commentService.update(comment, commentForm.getContent());
-        return "redirect:/reviews/" + comment.getBookReview().getId();
+        return "redirect:/reviews/detail/" + comment.getBookReview().getId();
     }
 
 }

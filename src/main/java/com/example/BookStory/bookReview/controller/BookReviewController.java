@@ -3,6 +3,7 @@ package com.example.BookStory.bookReview.controller;
 import com.example.BookStory.bookReview.dto.BookReviewForm;
 import com.example.BookStory.bookReview.entity.BookReview;
 import com.example.BookStory.bookReview.service.BookReviewService;
+import com.example.BookStory.comment.dto.CommentForm;
 import com.example.BookStory.user.entity.SiteUser;
 import com.example.BookStory.user.service.UserService;
 import jakarta.validation.Valid;
@@ -98,6 +99,7 @@ public class BookReviewController {
         bookReviewService.save(review);
 
         model.addAttribute("review", reviewOpt.get());
+        model.addAttribute("commentForm", new CommentForm());
         return "reviews/detail";
     }
 
