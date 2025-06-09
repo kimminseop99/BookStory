@@ -1,24 +1,14 @@
-<header th:fragment="headerFragment" class="bg-[#3B82F6] shadow-sm">
+<header th:fragment="headerFragment" class="bg-[#3B82F6] shadow-sm relative">
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
         <!-- 로고 -->
         <h1 class="text-2xl md:text-3xl font-extrabold text-white flex items-center">
-            <a href="/main" class="flex items-center space-x-2">
-                <img th:src="@{/images/main/BookStory_logo.png}" alt="Book Story 로고" class="w-20 h-20 object-contain drop-shadow-lg" />
+            <a href="/main" class="w-[110px] h-[110px]">
+                <img th:src="@{/images/main/BookStory_logo.png}" alt="Book Story 로고"  />
             </a>
         </h1>
 
-        <!-- 독후감 버튼 -->
-        <a th:href="@{/reviews/list}" class="text-white text-sm font-medium px-5 py-2 rounded-md transition hover:bg-gray-500">
-            독후감
-        </a>
-
-        <!-- 문의하기 버튼 -->
-        <a th:href="@{/support/index}" class="text-white text-sm font-medium px-5 py-2 rounded-md transition hover:bg-gray-500">
-            고객센터
-        </a>
-
-        <!-- 중앙 검색창 -->
-        <div class="flex mx-4 flex-1 justify-center">
+        <!-- 중앙 검색창 (모바일~PC 공통) -->
+        <div class="flex flex-1 justify-center px-2">
             <form action="/search" method="get" onsubmit="encodeSearchQuery()" class="w-full max-w-md">
                 <div class="flex rounded-full shadow-md overflow-hidden border border-white bg-white">
                     <input type="text" id="searchQuery" name="query" placeholder="책 검색"
@@ -36,29 +26,33 @@
             </form>
         </div>
 
-        <!-- 로그인/회원 메뉴 -->
-        <div class="flex items-center space-x-4">
-            <!-- 비로그인 시 -->
+        <!-- 햄버거 버튼 (모바일용) -->
+        <button class="md:hidden p-2 rounded-md text-white hover:bg-blue-500 transition" onclick="toggleDrawer()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
+
+        <!-- PC용 메뉴 -->
+        <div class="hidden md:flex items-center space-x-4">
+            <a th:href="@{/reviews/list}" class="text-white text-sm font-medium px-5 py-2 rounded-md transition hover:bg-gray-500">독후감</a>
+            <a th:href="@{/support/index}" class="text-white text-sm font-medium px-5 py-2 rounded-md transition hover:bg-gray-500">고객센터</a>
+
             <div class="flex items-center space-x-2" sec:authorize="isAnonymous()">
-                <a th:href="@{/user/login}" class="px-4 py-2 text-white hover:underline transition">
-                    로그인
-                </a>
+                <a th:href="@{/user/login}" class="px-4 py-2 text-white hover:underline transition">로그인</a>
             </div>
 
-            <!-- 로그인 시 -->
             <div class="relative" sec:authorize="isAuthenticated()">
-                <span th:text="${#authentication.name} + ' 님'"
-                      class="max-w-[7ch] truncate text-sm text-white mr-2 hidden sm:inline-block"></span>
-                <button id="userMenuButton" onclick="toggleDropdown()" class="p-2 rounded-full bg-white text-blue-600 hover:bg-blue-100 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                         viewBox="0 0 24 24" stroke-width="1.5"
-                         stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round"
+                <span th:text="${#authentication.name} + ' 님'" class="text-sm text-white mr-2 hidden sm:inline-block truncate max-w-[7ch]"></span>
+                <button id="userMenuButton" onclick="toggleDropdown()" class="p-2 rounded-full bg-white text-blue-600 hover:bg-blue-100 transition focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                               d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                     </svg>
                 </button>
-
-                <!-- 드롭다운 메뉴 -->
                 <div id="userDropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg ring-1 ring-blue-200 z-50">
                     <a th:href="@{/user/mypage}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-100 transition">마이페이지</a>
                     <a th:href="@{/reviews/list}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-100 transition">독후감</a>
@@ -68,7 +62,24 @@
         </div>
     </div>
 
-    <!-- 드롭다운 제어 및 검색 인코딩 -->
+    <!-- 드로어 메뉴 (모바일용) -->
+    <div id="drawerOverlay" class="fixed inset-0 bg-black bg-opacity-40 z-40 hidden" onclick="closeDrawer()"></div>
+    <div id="mobileDrawer" class="fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform translate-x-full transition-transform duration-300 z-50 p-6 space-y-4">
+        <button class="text-gray-600 hover:text-red-500 mb-4" onclick="closeDrawer()">
+            ✕ 닫기
+        </button>
+        <a th:href="@{/reviews/list}" class="block text-gray-800 text-base font-medium hover:text-blue-600">독후감</a>
+        <a th:href="@{/support/index}" class="block text-gray-800 text-base font-medium hover:text-blue-600">고객센터</a>
+        <div sec:authorize="isAnonymous()">
+            <a th:href="@{/user/login}" class="block text-gray-800 text-base font-medium hover:text-blue-600">로그인</a>
+        </div>
+        <div sec:authorize="isAuthenticated()">
+            <a th:href="@{/user/mypage}" class="block text-gray-800 text-base font-medium hover:text-blue-600">마이페이지</a>
+            <a th:href="@{/user/logout}" class="block text-red-600 text-base font-medium hover:text-red-800">로그아웃</a>
+        </div>
+    </div>
+
+    <!-- 제어 스크립트 -->
     <script>
         function toggleDropdown() {
             const dropdown = document.getElementById("userDropdownMenu");
@@ -83,9 +94,19 @@
         document.addEventListener('click', function (event) {
             const dropdown = document.getElementById("userDropdownMenu");
             const button = document.getElementById("userMenuButton");
-            if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+            if (dropdown && button && !button.contains(event.target) && !dropdown.contains(event.target)) {
                 dropdown.classList.add("hidden");
             }
         });
+
+        function toggleDrawer() {
+            document.getElementById("mobileDrawer").classList.remove("translate-x-full");
+            document.getElementById("drawerOverlay").classList.remove("hidden");
+        }
+
+        function closeDrawer() {
+            document.getElementById("mobileDrawer").classList.add("translate-x-full");
+            document.getElementById("drawerOverlay").classList.add("hidden");
+        }
     </script>
 </header>
